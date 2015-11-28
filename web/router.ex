@@ -17,6 +17,10 @@ defmodule Decomposite.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    resources "/registrations", RegistrationController, only: [:new, :create]
+    get "/signin", SessionController, :new
+    post "/signin", SessionController, :create
+    delete "/signout", SessionController, :delete
   end
 
   # Other scopes may use custom stacks.
