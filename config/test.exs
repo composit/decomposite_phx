@@ -15,5 +15,5 @@ config :decomposite, Decomposite.Repo,
   username: "postgres",
   password: "postgres",
   database: "decomposite_test",
-  hostname: "localhost",
+  hostname: "db",
   pool: Ecto.Adapters.SQL.Sandbox
