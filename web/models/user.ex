@@ -2,7 +2,7 @@ defmodule Decomposite.User do
   use Decomposite.Web, :model
 
   schema "users" do
-    field :name, :string
+    field :name, :string, unique: true
     field :crypted_password, :string
     field :password, :string, virtual: true
 
