@@ -21,6 +21,8 @@ defmodule Decomposite.Router do
     get "/signin", SessionController, :new
     post "/signin", SessionController, :create
     delete "/signout", SessionController, :delete
+
+    resources "/d", DiscourseController, only: [:show]
   end
 
   # Other scopes may use custom stacks.

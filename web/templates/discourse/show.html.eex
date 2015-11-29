@@ -1,0 +1,3 @@
+<%= for thing <- @discourse.things_said["t"] do %>
+  <p><%= thing %></p>
+<% end %>
