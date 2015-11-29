@@ -1,6 +1,8 @@
 defmodule Decomposite.Discourse do
   use Decomposite.Web, :model
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "discourses" do
     field :things_said, :map
     field :parent_thing_said_index, :integer
