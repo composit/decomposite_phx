@@ -9,6 +9,9 @@
 
     <title>Decomposite web-page</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <script>
+      window.discourseId = "<%= @discourse.id %>";
+    </script>
   </head>
 
   <body>
@@ -32,6 +35,7 @@
       <%= @inner %>
 
     </div> <!-- /container -->
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

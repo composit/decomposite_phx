@@ -54,9 +54,24 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("discourses:" + window.discourseId, {})
+let $thingToSay = $("#thing-to-say")
+let $saySubmitter = $("#say-submitter")
+let $discourse = $("#discourse")
+
+$saySubmitter.on("click", event => {
+  let thingSaid = $thingToSay.val()
+  appendThing(thingSaid)
+  channel.push("new_thing_said", {body: thingSaid})
+  $thingToSay.val("")
+});
+
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("ok", resp => { console.log("Joined successfullier", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
 export default socket
+
+function appendThing(thing) {
+  $discourse.append(`<p class="thing">${thing}</p>`)
+}

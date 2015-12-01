@@ -4,7 +4,9 @@ defmodule Decomposite.RegistrationController do
 
   def new(conn, _params) do
     changeset = User.changeset(%User{})
-    render conn, changeset: changeset
+    conn
+    |> put_layout(false)
+    |> render(changeset: changeset)
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -19,6 +21,7 @@ defmodule Decomposite.RegistrationController do
       {:error, changeset} ->
         conn
         |> put_flash(:info, "Not able to make your account")
+        |> put_layout(false)
         |> render("new.html", changeset: changeset)
     end
   end

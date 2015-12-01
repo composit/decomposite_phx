@@ -2,7 +2,9 @@ defmodule Decomposite.SessionController do
   use Decomposite.Web, :controller
 
   def new(conn, _params) do
-    render conn, "new.html"
+    conn
+    |> put_layout(false)
+    |> render("new.html")
   end
 
   def create(conn, %{"session" => session_params}) do
@@ -15,6 +17,7 @@ defmodule Decomposite.SessionController do
       :error ->
         conn
         |> put_flash(:info, "Wrong!")
+        |> put_layout(false)
         |> render("new.html")
     end
   end

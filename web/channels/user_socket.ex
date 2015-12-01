@@ -2,7 +2,7 @@ defmodule Decomposite.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", Decomposite.RoomChannel
+  channel "discourses:*", Decomposite.DiscourseChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -1,3 +1,7 @@
-<%= for thing <- @discourse.things_said["t"] do %>
-  <p><%= thing %></p>
-<% end %>
+<div id="discourse">
+  <%= for thing <- @discourse.things_said["t"] do %>
+    <p class="thing"><%= thing %></p>
+  <% end %>
+</div>
+<input id="thing-to-say" type="text" />
+<input type="submit" id="say-submitter" />

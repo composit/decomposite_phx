@@ -1,5 +1,3 @@
-require IEx
-
 defmodule Decomposite.UserTest do
   use Decomposite.ModelCase
 
