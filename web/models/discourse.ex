@@ -6,12 +6,14 @@ defmodule Decomposite.Discourse do
   schema "discourses" do
     field :things_said, :map
     field :parent_thing_said_index, :integer
-    belongs_to :parent_discourse, Decomposite.ParentDiscourse
+    belongs_to :parent_discourse, Decomposite.ParentDiscourse, type: :binary_id
+    belongs_to :initiator, Decomposite.User
+    belongs_to :replier, Decomposite.User
 
     timestamps
   end
 
-  @required_fields ~w(things_said parent_thing_said_index)
+  @required_fields ~w(things_said parent_discourse_id parent_thing_said_index initiator_id replier_id)
   @optional_fields ~w()
 
   @doc """

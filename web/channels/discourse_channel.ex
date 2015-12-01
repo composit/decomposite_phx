@@ -2,7 +2,13 @@ defmodule Decomposite.DiscourseChannel do
   use Phoenix.Channel
 
   def join("discourses:" <> discourse_id, _params, socket) do
-    {:ok, socket}
+    discourse = Decomposite.Repo.get!(Decomposite.Discourse, discourse_id)
+    user_id = socket.assigns[:user_id]
+    if user_id == discourse.initiator_id or user_id == discourse.replier_id do
+      {:ok, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
   end
 
   def handle_in("new_thing_said", %{"body" => body}, socket) do
