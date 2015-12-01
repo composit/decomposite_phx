@@ -15,7 +15,7 @@ defmodule Decomposite.RegistrationController do
     case Decomposite.Registration.create(changeset, Decomposite.Repo) do
       {:ok, changeset} ->
         conn
-        |> put_session(:current_user, changeset.id)
+        |> put_session(:current_user_id, changeset.id)
         |> put_flash(:info, "Your account was made")
         |> redirect(to: "/")
       {:error, changeset} ->

@@ -1,3 +1,5 @@
+require IEx
+
 defmodule Decomposite.Router do
   use Decomposite.Web, :router
 
@@ -32,8 +34,8 @@ defmodule Decomposite.Router do
   # end
 
   defp put_user_token(conn, _) do
-    if current_user = conn.assigns[:current_user] do
-      token = Phoenix.Token.sign(conn, "user socket", current_user.id)
+    if current_user_id = Plug.Conn.get_session(conn, :current_user_id) do
+      token = Phoenix.Token.sign(conn, "user socket", current_user_id)
       assign(conn, :user_token, token)
     else
       conn

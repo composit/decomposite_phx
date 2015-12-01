@@ -11,7 +11,7 @@ defmodule Decomposite.SessionController do
     case Decomposite.Session.signin(session_params, Decomposite.Repo) do
       {:ok, user} ->
         conn
-        |> put_session(:current_user, user.id)
+        |> put_session(:current_user_id, user.id)
         |> put_flash(:info, "Signed in")
         |> redirect(to: "/")
       :error ->
@@ -24,7 +24,7 @@ defmodule Decomposite.SessionController do
 
   def delete(conn, _) do
     conn
-    |> delete_session(:current_user)
+    |> delete_session(:current_user_id)
     |> put_flash(:info, "Signed out")
     |> redirect(to: "/")
   end
