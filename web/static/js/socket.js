@@ -55,15 +55,15 @@ socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("discourses:" + window.discourseId, {})
-let $thingToSay = $("#thing-to-say")
+let $pointToMake = $("#point-to-make")
 let $saySubmitter = $("#say-submitter")
-let $discourse = $("#discourse")
+let $points = $("#points")
 
 $saySubmitter.on("click", event => {
-  let thingSaid = $thingToSay.val()
-  appendThing(thingSaid, window.userName)
-  channel.push("new_thing_said", {body: thingSaid})
-  $thingToSay.val("")
+  let pointMade = $pointToMake.val()
+  appendPoint(pointMade, window.userName)
+  channel.push("new_point", {body: pointMade})
+  $pointToMake.val("")
 });
 
 channel.join()
@@ -72,17 +72,17 @@ channel.join()
 
 export default socket
 
-function appendThing(thing, name) {
-  $discourse.append(`<p class="thing">${thing} - ${name}</p>`)
+function appendPoint(point, name) {
+  $points.append(`<p class="point">${point} - ${name}</p>`)
   showOrHideSayer()
 }
 
 function showOrHideSayer() {
-  let numberOfThingsSaid = $("#discourse .thing").length
+  let numberOfPoints = $("#discourse #points .point").length
   let $sayer = $("#sayer")
-  if(numberOfThingsSaid % 2 == 0 && window.userType == "initiator") {
+  if(numberOfPoints % 2 == 0 && window.userType == "initiator") {
     $sayer.show()
-  } else if(numberOfThingsSaid % 2 == 1 && window.userType == "replier") {
+  } else if(numberOfPoints % 2 == 1 && window.userType == "replier") {
     $sayer.show()
   } else {
     $sayer.hide()

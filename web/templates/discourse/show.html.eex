@@ -1,12 +1,14 @@
 <div id="discourse">
-  <%= for {thing, i} <- Enum.with_index(@discourse.things_said["t"]) do %>
-    <p class="thing">
-      <%= thing %>
-      - <%= sayer_name(@discourse, i) %>
-    </p>
-  <% end %>
-</div>
-<div id="sayer">
-  <input id="thing-to-say" type="text" />
-  <input type="submit" id="say-submitter" />
+  <div id="points">
+    <%= for {point, i} <- Enum.with_index(@discourse.points["p"]) do %>
+      <p class="point">
+        <%= point %>
+        - <%= sayer_name(@discourse, i) %>
+      </p>
+    <% end %>
+  </div>
+  <div id="sayer">
+    <input id="point-to-make" type="text" />
+    <input type="submit" id="say-submitter" />
+  </div>
 </div>

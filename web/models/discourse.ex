@@ -6,8 +6,8 @@ defmodule Decomposite.Discourse do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "discourses" do
-    field :things_said, :map
-    field :parent_thing_said_index, :integer
+    field :points, :map
+    field :parent_point_index, :integer
     belongs_to :parent_discourse, Decomposite.ParentDiscourse, type: :binary_id
     belongs_to :initiator, Decomposite.User
     belongs_to :replier, Decomposite.User
@@ -16,7 +16,7 @@ defmodule Decomposite.Discourse do
     timestamps
   end
 
-  @required_fields ~w(things_said parent_discourse_id parent_thing_said_index initiator_id replier_id)
+  @required_fields ~w(points parent_discourse_id parent_point_index initiator_id replier_id)
   @optional_fields ~w()
 
   @doc """
@@ -35,11 +35,11 @@ defmodule Decomposite.Discourse do
     updater_id = changeset.params["updater_id"]
     initiator_id = get_field(changeset, :initiator_id)
     replier_id = get_field(changeset, :replier_id)
-    length_of_things_said = length(get_field(changeset, :things_said)["t"])
+    number_of_points = length(get_field(changeset, :points)["p"])
     cond do
-      Integer.is_even(length_of_things_said) && updater_id == replier_id ->
+      Integer.is_even(number_of_points) && updater_id == replier_id ->
         changeset
-      Integer.is_odd(length_of_things_said) && updater_id == initiator_id ->
+      Integer.is_odd(number_of_points) && updater_id == initiator_id ->
         changeset
       true ->
         add_error(changeset, :updater_id, "does not have permissions to update this discourse")

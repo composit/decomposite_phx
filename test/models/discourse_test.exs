@@ -3,8 +3,8 @@ defmodule Decomposite.DiscourseTest do
 
   alias Decomposite.Discourse
 
-  @valid_attrs %{parent_discourse_id: "abc123", parent_thing_said_index: 42, things_said: %{"t" => []}, initiator_id: 123, replier_id: 456, updater_id: 456}
-  @invalid_attrs %{things_said: %{"t" => []}}
+  @valid_attrs %{parent_discourse_id: "abc123", parent_point_index: 42, points: %{"p" => []}, initiator_id: 123, replier_id: 456, updater_id: 456}
+  @invalid_attrs %{points: %{"p" => []}}
 
   test "changeset with valid attributes" do
     changeset = Discourse.changeset(%Discourse{}, @valid_attrs)
