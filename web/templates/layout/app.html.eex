@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <script>
       window.discourseId = "<%= @discourse.id %>"
-      window.userToken   = "<%= assigns[:user_token] %>"
+      <%= if assigns[:user_token] do %>
+        window.userToken   = "<%= assigns[:user_token] %>"
+        window.userName    = "<%= current_user(@conn).name %>"
+        window.userType    = "<%= user_type(@discourse, current_user(@conn).id) %>"
+      <% end %>
     </script>
   </head>
 

@@ -10,7 +10,7 @@ defmodule Decomposite.User do
   end
 
   @required_fields ~w(name password)
-  @optional_fields ~w()
+  @optional_fields ~w(crypted_password)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

@@ -10,8 +10,9 @@ defmodule Decomposite.DiscourseController do
   def landing(conn, _params) do
     query = from d in Discourse,
             order_by: [desc: d.inserted_at],
+            preload: [:initiator, :replier],
             limit: 1
-    results = Decomposite.Repo.all(query)
+    results = Repo.all(query)
     discourse = hd(results)
     render(conn, "show.html", discourse: discourse)
   end

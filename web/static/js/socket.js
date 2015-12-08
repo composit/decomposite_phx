@@ -61,7 +61,7 @@ let $discourse = $("#discourse")
 
 $saySubmitter.on("click", event => {
   let thingSaid = $thingToSay.val()
-  appendThing(thingSaid)
+  appendThing(thingSaid, window.userName)
   channel.push("new_thing_said", {body: thingSaid})
   $thingToSay.val("")
 });
@@ -72,6 +72,21 @@ channel.join()
 
 export default socket
 
-function appendThing(thing) {
-  $discourse.append(`<p class="thing">${thing}</p>`)
+function appendThing(thing, name) {
+  $discourse.append(`<p class="thing">${thing} -${name}</p>`)
+  showOrHideSayer()
 }
+
+function showOrHideSayer() {
+  let numberOfThingsSaid = $("#discourse .thing").length
+  let $sayer = $("#sayer")
+  if(numberOfThingsSaid % 2 == 0 && window.userType == "initiator") {
+    $sayer.show()
+  } else if(numberOfThingsSaid % 2 == 1 && window.userType == "replier") {
+    $sayer.show()
+  } else {
+    $sayer.hide()
+  }
+}
+
+showOrHideSayer()
