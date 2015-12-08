@@ -73,7 +73,7 @@ channel.join()
 export default socket
 
 function appendThing(thing, name) {
-  $discourse.append(`<p class="thing">${thing} -${name}</p>`)
+  $discourse.append(`<p class="thing">${thing} - ${name}</p>`)
   showOrHideSayer()
 }
 

@@ -16,7 +16,8 @@ defmodule Decomposite.DiscourseChannel do
     discourse = Decomposite.Repo.get!(Decomposite.Discourse, discourse_id)
     things_said = discourse.things_said["t"]
     new_things_said = things_said ++ [body]
-    changeset = Decomposite.Discourse.changeset(discourse, %{things_said: %{"t" => new_things_said}})
+    user_id = socket.assigns[:user_id]
+    changeset = Decomposite.Discourse.changeset(discourse, %{things_said: %{"t" => new_things_said}, updater_id: user_id})
     Decomposite.Repo.update(changeset)
 
     {:noreply, socket}
