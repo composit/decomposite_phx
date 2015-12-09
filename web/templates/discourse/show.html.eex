@@ -12,3 +12,21 @@
     <input type="submit" id="say-submitter" />
   </div>
 </div>
+<div id="comments">
+  <%= for {_, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
+    <div id="point-#{point_index}-comments" class="point-comments">
+      <div class="comments">
+        <%= for [comment, commenter_id] <- comments_by_point_index(@discourse.comments, point_index) do %>
+          <p class="comment">
+            <%= comment %>
+            - <%= find_user(commenter_id).name %>
+          </p>
+        <% end %>
+      </div>
+      <div class="commenter">
+        <input class="comment-to-make" type="text" />
+        <input type="submit" class="comment-submitter" data-point-index="<%= point_index %>" />
+      </div>
+    </div>
+  <% end %>
+</div>

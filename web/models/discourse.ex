@@ -7,6 +7,7 @@ defmodule Decomposite.Discourse do
 
   schema "discourses" do
     field :points, :map
+    field :comments, :map
     field :parent_point_index, :integer
     belongs_to :parent_discourse, Decomposite.ParentDiscourse, type: :binary_id
     belongs_to :initiator, Decomposite.User
@@ -16,7 +17,7 @@ defmodule Decomposite.Discourse do
     timestamps
   end
 
-  @required_fields ~w(points parent_discourse_id parent_point_index initiator_id replier_id)
+  @required_fields ~w(points comments parent_discourse_id parent_point_index initiator_id replier_id)
   @optional_fields ~w()
 
   @doc """
@@ -32,17 +33,21 @@ defmodule Decomposite.Discourse do
   end
 
   def validate_authorized(changeset) do
-    updater_id = changeset.params["updater_id"]
-    initiator_id = get_field(changeset, :initiator_id)
-    replier_id = get_field(changeset, :replier_id)
-    number_of_points = length(get_field(changeset, :points)["p"])
-    cond do
-      Integer.is_even(number_of_points) && updater_id == replier_id ->
-        changeset
-      Integer.is_odd(number_of_points) && updater_id == initiator_id ->
-        changeset
-      true ->
-        add_error(changeset, :updater_id, "does not have permissions to update this discourse")
+    if Enum.member?(Map.keys(changeset.changes), :points) do
+      updater_id = changeset.params["updater_id"]
+      initiator_id = get_field(changeset, :initiator_id)
+      replier_id = get_field(changeset, :replier_id)
+      number_of_points = length(get_field(changeset, :points)["p"])
+      cond do
+        Integer.is_even(number_of_points) && updater_id == replier_id ->
+          changeset
+        Integer.is_odd(number_of_points) && updater_id == initiator_id ->
+          changeset
+        true ->
+          add_error(changeset, :updater_id, "does not have permissions to update this discourse")
+      end
+    else
+      changeset
     end
   end
 end

@@ -55,6 +55,7 @@ socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("discourses:" + window.discourseId, {})
+
 let $pointToMake = $("#point-to-make")
 let $saySubmitter = $("#say-submitter")
 let $points = $("#points")
@@ -64,6 +65,15 @@ $saySubmitter.on("click", event => {
   appendPoint(pointMade, window.userName)
   channel.push("new_point", {body: pointMade})
   $pointToMake.val("")
+});
+
+$(".comment-submitter").on("click", event => {
+  let $commentToMake = $(event.target).siblings(".comment-to-make").first()
+  let commentMade = $commentToMake.val()
+  let $comments = $(event.target).closest(".commenter").siblings(".comments")
+  $comments.append(`<p class="comment">${commentMade} - ${window.userName}</p>`)
+  channel.push("new_comment", {body: commentMade, point_index: $(event.target).data("pointIndex")})
+  $commentToMake.val("")
 });
 
 channel.join()

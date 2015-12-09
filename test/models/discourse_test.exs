@@ -3,7 +3,7 @@ defmodule Decomposite.DiscourseTest do
 
   alias Decomposite.Discourse
 
-  @valid_attrs %{parent_discourse_id: "abc123", parent_point_index: 42, points: %{"p" => []}, initiator_id: 123, replier_id: 456, updater_id: 456}
+  @valid_attrs %{parent_discourse_id: "abc123", parent_point_index: 42, points: %{"p" => []}, comments: %{"c" => []}, initiator_id: 123, replier_id: 456, updater_id: 456}
   @invalid_attrs %{points: %{"p" => []}}
 
   test "changeset with valid attributes" do
