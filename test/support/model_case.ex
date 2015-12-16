@@ -20,6 +20,7 @@ defmodule Decomposite.ModelCase do
       import Ecto.Model
       import Ecto.Query, only: [from: 2]
       import Decomposite.ModelCase
+      import Decomposite.Factories
     end
   end
 

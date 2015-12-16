@@ -2,7 +2,7 @@ defmodule Decomposite.DiscourseChannel do
   use Phoenix.Channel
 
   def join("discourses:" <> _discourse_id, _params, socket) do
-    if socket.assigns[:user_id] do
+    if authorized?(socket) do
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -15,9 +15,9 @@ defmodule Decomposite.DiscourseChannel do
     new_points = points ++ [body]
     user_id = socket.assigns[:user_id]
     changeset = Decomposite.Discourse.changeset(discourse, %{points: %{"p" => new_points}, updater_id: user_id})
-    Decomposite.Repo.update(changeset)
+    {response, changeset} = Decomposite.Repo.update(changeset)
 
-    {:noreply, socket}
+    {:reply, response, socket}
   end
 
   def handle_in("new_comment", %{"body" => body, "point_index" => point_index}, socket) do
@@ -32,10 +32,10 @@ defmodule Decomposite.DiscourseChannel do
     else
       new_comments = insert_with_empties(comments, point_index, new_comment)
     end
-    changeset = Decomposite.Discourse.changeset(discourse, %{comments: %{"c" => new_comments}})
+    changeset = Decomposite.Discourse.changeset(discourse, %{comments: %{"c" => new_comments}, updater_id: commenter_id})
     Decomposite.Repo.update(changeset)
 
-    {:noreply, socket}
+    {:reply, :ok, socket}
   end
 
   defp insert_with_empties(comments, point_index, new_comment) do
@@ -50,5 +50,9 @@ defmodule Decomposite.DiscourseChannel do
   defp get_discourse_by_topic(topic) do
     [_, discourse_id] = String.split(topic, ":", parts: 2)
     Decomposite.Repo.get!(Decomposite.Discourse, discourse_id)
+  end
+
+  defp authorized?(socket) do
+    !!socket.assigns[:user_id]
   end
 end

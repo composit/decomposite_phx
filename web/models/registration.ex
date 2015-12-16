@@ -7,7 +7,7 @@ defmodule Decomposite.Registration do
     |> repo.insert()
   end
 
-  def hashed_password(password) do
+  defp hashed_password(password) do
     Comeonin.Bcrypt.hashpwsalt(password)
   end
 end

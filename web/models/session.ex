@@ -16,7 +16,7 @@ defmodule Decomposite.Session do
 
   def signed_in?(conn), do: !!current_user(conn)
 
-  def authenticate(user, password) do
+  defp authenticate(user, password) do
     case user do
       nil -> false
       _   -> Comeonin.Bcrypt.checkpw(password, user.crypted_password)

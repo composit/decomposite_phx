@@ -4,16 +4,18 @@ defmodule Decomposite.DiscourseController do
 
   def show(conn, %{"id" => id}) do
     discourse = Repo.get!(Discourse, id)
+    |> Repo.preload([:initiator, :replier])
     render(conn, "show.html", discourse: discourse)
   end
 
   def landing(conn, _params) do
     query = from d in Discourse,
-            order_by: [desc: d.inserted_at],
+            order_by: [desc: d.updated_at],
             preload: [:initiator, :replier],
-            limit: 1
-    results = Repo.all(query)
-    discourse = hd(results)
+            limit: 10
+    discourse = Repo.all(query)
+    |> Enum.reverse
+    |> hd
     render(conn, "show.html", discourse: discourse)
   end
 end

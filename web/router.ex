@@ -1,5 +1,3 @@
-require IEx
-
 defmodule Decomposite.Router do
   use Decomposite.Web, :router
 

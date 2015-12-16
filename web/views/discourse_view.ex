@@ -1,5 +1,4 @@
 require Integer
-require IEx
 
 defmodule Decomposite.DiscourseView do
   use Decomposite.Web, :view

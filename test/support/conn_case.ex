@@ -25,6 +25,7 @@ defmodule Decomposite.ConnCase do
       import Ecto.Query, only: [from: 2]
 
       import Decomposite.Router.Helpers
+      import Decomposite.Factories
 
       # The default endpoint for testing
       @endpoint Decomposite.Endpoint

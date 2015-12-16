@@ -23,7 +23,7 @@ defmodule Decomposite.ChannelCase do
       alias Decomposite.Repo
       import Ecto.Model
       import Ecto.Query, only: [from: 2]
-
+      import Decomposite.Factories
 
       # The default endpoint for testing
       @endpoint Decomposite.Endpoint
