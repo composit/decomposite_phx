@@ -48,7 +48,7 @@ defmodule Decomposite.Web do
       use Phoenix.HTML
 
       import Decomposite.Router.Helpers
-      import Decomposite.Session, only: [current_user: 1, signed_in?: 1]
+      import Decomposite.Session, only: [current_user: 1, current_user_id: 1, signed_in?: 1]
     end
   end
 

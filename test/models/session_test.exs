@@ -35,6 +35,13 @@ defmodule Decomposite.SessionTest do
     assert response == :error
   end
 
+  test "returns current user id", context do
+    current_user_id = context[:conn]
+    |> Plug.Conn.put_session(:current_user_id, context[:user].id)
+    |> Session.current_user_id
+    assert current_user_id == context[:user].id
+  end
+
   test "returns current user", context do
     current_user = context[:conn]
     |> Plug.Conn.put_session(:current_user_id, context[:user].id)

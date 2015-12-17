@@ -16,7 +16,7 @@
   <%= for {_, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
     <div id="point-#{point_index}-comments" class="point-comments">
       <div class="comments">
-        <%= for [comment, commenter_id] <- comments_by_point_index(@discourse.comments, point_index) do %>
+        <%= for [comment, commenter_id] <- visible_comments(@discourse, point_index, current_user_id(@conn)) do %>
           <p class="comment">
             <%= comment %>
             - <%= find_user(commenter_id).name %>
