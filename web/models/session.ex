@@ -11,11 +11,11 @@ defmodule Decomposite.Session do
 
   def current_user(conn) do
     id = current_user_id(conn)
-    if id, do: Decomposite.Repo.get(User, id)
+    if id, do: Decomposite.Repo.get!(User, id)
   end
 
   def current_user_id(conn) do
-    Plug.Conn.get_session(conn, :current_user_id)
+    conn.assigns[:user_id]
   end
 
   def signed_in?(conn), do: !!current_user(conn)

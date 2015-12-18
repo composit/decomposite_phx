@@ -16,10 +16,13 @@
   <%= for {_, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
     <div id="point-#{point_index}-comments" class="point-comments">
       <div class="comments">
-        <%= for [comment, commenter_id] <- visible_comments(@discourse, point_index, current_user_id(@conn)) do %>
+        <%= for {[comment, commenter_id], comment_index} <- Enum.with_index(visible_comments(@discourse, point_index, current_user_id(@conn))) do %>
           <p class="comment">
             <%= comment %>
             - <%= find_user(commenter_id).name %>
+            <%= if belongs_to_user(@discourse, point_index, current_user_id(@conn)) do %>
+              <%= link "reply", to: discourse_path(@conn, :new, @discourse.id, point_index, comment_index) %>
+            <% end %>
           </p>
         <% end %>
       </div>

@@ -1,4 +1,3 @@
-require IEx
 require Integer
 
 defmodule Decomposite.DiscourseView do
@@ -16,9 +15,7 @@ defmodule Decomposite.DiscourseView do
     comments_by_point_index(discourse.comments, point_index)
     |> Enum.filter fn(comment) ->
       cond do
-        Integer.is_even(point_index) && user_id == discourse.initiator_id ->
-          true
-        Integer.is_odd(point_index) && user_id == discourse.replier_id ->
+        belongs_to_user(discourse, point_index, user_id) ->
           true
         Enum.count(comment) == 3 ->
           true
@@ -36,5 +33,16 @@ defmodule Decomposite.DiscourseView do
 
   def find_user(user_id) do
     Decomposite.Repo.get!(Decomposite.User, user_id)
+  end
+
+  def belongs_to_user(discourse, point_index, user_id) do
+    cond do
+      Integer.is_even(point_index) && user_id == discourse.initiator_id ->
+        true
+      Integer.is_odd(point_index) && user_id == discourse.replier_id ->
+        true
+      true ->
+        false
+    end
   end
 end

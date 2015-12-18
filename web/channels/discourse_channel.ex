@@ -1,5 +1,8 @@
 defmodule Decomposite.DiscourseChannel do
   use Phoenix.Channel
+  alias Decomposite.Repo
+  alias Decomposite.Discourse
+  alias Decomposite.DiscourseFactory
 
   def join("discourses:" <> _discourse_id, _params, socket) do
     if authorized?(socket) do
@@ -9,13 +12,22 @@ defmodule Decomposite.DiscourseChannel do
     end
   end
 
+  def handle_in("new_discourse", %{"parent_discourse_id" => parent_discourse_id, "parent_point_index" => parent_point_index, "parent_comment_index" => parent_comment_index,  "body" => body}, socket) do
+    initiator_id = socket.assigns[:user_id]
+    discourse_fields = DiscourseFactory.fields_from_parent(parent_discourse_id, parent_point_index, parent_comment_index, initiator_id, body)
+    changeset = Discourse.changeset(%Discourse{}, Dict.merge(discourse_fields, %{updater_id: initiator_id}))
+    {response, changeset} = Repo.insert(changeset)
+
+    {:reply, response, socket}
+  end
+
   def handle_in("new_point", %{"body" => body}, socket) do
     discourse = get_discourse_by_topic(socket.topic)
     points = discourse.points["p"]
     new_points = points ++ [body]
     user_id = socket.assigns[:user_id]
-    changeset = Decomposite.Discourse.changeset(discourse, %{points: %{"p" => new_points}, updater_id: user_id})
-    {response, changeset} = Decomposite.Repo.update(changeset)
+    changeset = Discourse.changeset(discourse, %{points: %{"p" => new_points}, updater_id: user_id})
+    {response, changeset} = Repo.update(changeset)
 
     {:reply, response, socket}
   end
@@ -32,8 +44,8 @@ defmodule Decomposite.DiscourseChannel do
     else
       new_comments = insert_with_empties(comments, point_index, new_comment)
     end
-    changeset = Decomposite.Discourse.changeset(discourse, %{comments: %{"c" => new_comments}, updater_id: commenter_id})
-    Decomposite.Repo.update(changeset)
+    Discourse.changeset(discourse, %{comments: %{"c" => new_comments}, updater_id: commenter_id})
+    |> Repo.update
 
     {:reply, :ok, socket}
   end
@@ -49,7 +61,7 @@ defmodule Decomposite.DiscourseChannel do
 
   defp get_discourse_by_topic(topic) do
     [_, discourse_id] = String.split(topic, ":", parts: 2)
-    Decomposite.Repo.get!(Decomposite.Discourse, discourse_id)
+    Repo.get!(Discourse, discourse_id)
   end
 
   defp authorized?(socket) do
