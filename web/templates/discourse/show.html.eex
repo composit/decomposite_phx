@@ -1,10 +1,10 @@
-<div id="discourse">
+<div id="discourse" class="col-md-8">
   <%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %>
   <div id="points">
-    <%= for {point, i} <- Enum.with_index(@discourse.points["p"]) do %>
-      <p class="point">
+    <%= for {point, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
+      <p class="point" data-point-index="<%= point_index %>">
         <%= point %>
-        - <%= sayer_name(@discourse, i) %>
+        - <%= sayer_name(@discourse, point_index) %>
       </p>
     <% end %>
   </div>
@@ -20,7 +20,7 @@
     <% end %>
   </div>
 </div>
-<div id="comments">
+<div id="comments" class="col-md-4">
   <%= for {_, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
     <div id="point-#{point_index}-comments" class="point-comments">
       <div class="comments">
