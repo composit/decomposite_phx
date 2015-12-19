@@ -16,9 +16,11 @@ defmodule Decomposite.DiscourseFactory do
     discourse = Repo.get!(Discourse, discourse_id)
     point = discourse.points["p"]
     |> Enum.at(point_index)
-    [comment, replier_id] = discourse.comments["c"]
+    comment_info = discourse.comments["c"]
     |> Enum.at(point_index)
     |> Enum.at(comment_index)
+    comment = Enum.at(comment_info, 0)
+    replier_id = Enum.at(comment_info, 1)
     points = [point, comment]
     if body, do: points = points ++ [body]
     %{

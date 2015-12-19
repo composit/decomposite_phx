@@ -1,5 +1,7 @@
 <div id="discourse" class="col-md-8">
-  <%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %>
+  <div class="actions">
+    <%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %>
+  </div>
   <div id="points">
     <%= for {point, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
       <p class="point" data-point-index="<%= point_index %>">
@@ -8,8 +10,8 @@
       </p>
     <% end %>
   </div>
-  <div id="sayer">
-    <input id="point-to-make" type="text" />
+  <div id="sayer" class="actions">
+    <textarea id="point-to-make" placeholder="respond..."></textarea>
     <%= if @discourse.id do %>
       <input type="submit" id="say-submitter" />
     <% else %>
@@ -39,7 +41,7 @@
         <% end %>
       </div>
       <div class="commenter">
-        <input class="comment-to-make" type="text" />
+        <textarea class="comment-to-make" placeholder="comment..."></textarea>
         <input type="submit" class="comment-submitter" data-point-index="<%= point_index %>" />
       </div>
     </div>

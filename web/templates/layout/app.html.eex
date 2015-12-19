@@ -8,6 +8,8 @@
     <meta name="author" content="">
 
     <title>Decomposite web-page</title>
+    <script src="https://use.typekit.net/uab3uxn.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <script>
       <%= if @discourse.id do %>
