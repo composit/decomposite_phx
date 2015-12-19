@@ -74,9 +74,11 @@ defmodule Decomposite.Discourse do
         Integer.is_odd(parent_point_index) ->
           parent_discourse.replier_id
       end
-      [parent_comment, parent_commenter_id] = parent_discourse.comments["c"]
+      parent_comment_info = parent_discourse.comments["c"]
       |> Enum.at(parent_point_index)
       |> Enum.at(get_field(changeset, :parent_comment_index))
+      parent_comment = Enum.at(parent_comment_info, 0)
+      parent_commenter_id = Enum.at(parent_comment_info, 1)
       points = get_field(changeset, :points)
       new_first_point = Enum.at(points["p"], 0)
       new_second_point = Enum.at(points["p"], 1)

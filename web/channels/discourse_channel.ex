@@ -1,3 +1,5 @@
+require Integer
+
 defmodule Decomposite.DiscourseChannel do
   use Phoenix.Channel
   alias Decomposite.Repo
@@ -15,8 +17,20 @@ defmodule Decomposite.DiscourseChannel do
   def handle_in("new_discourse", %{"parent_discourse_id" => parent_discourse_id, "parent_point_index" => parent_point_index, "parent_comment_index" => parent_comment_index,  "body" => body}, socket) do
     initiator_id = socket.assigns[:user_id]
     discourse_fields = DiscourseFactory.fields_from_parent(parent_discourse_id, parent_point_index, parent_comment_index, initiator_id, body)
-    changeset = Discourse.changeset(%Discourse{}, Dict.merge(discourse_fields, %{updater_id: initiator_id}))
-    {response, changeset} = Repo.insert(changeset)
+    {response, changeset} = Discourse.changeset(%Discourse{}, Dict.merge(discourse_fields, %{updater_id: initiator_id}))
+    |> Repo.insert
+    if response == :ok do
+      parent_discourse = Repo.get!(Discourse, parent_discourse_id)
+      {point_index, _} = Integer.parse(parent_point_index)
+      {comment_index, _} = Integer.parse(parent_comment_index)
+      comments = parent_discourse.comments["c"]
+      parent_point_comments = Enum.at(comments, point_index)
+      |> List.update_at(comment_index, &(&1 ++ [changeset.id]))
+      comments = List.replace_at(comments, point_index, parent_point_comments)
+      user_id = socket.assigns[:user_id]
+      Discourse.changeset(parent_discourse, %{comments: %{"c" => comments}, updater_id: user_id})
+      |> Repo.update!
+    end
 
     {:reply, response, socket}
   end

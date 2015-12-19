@@ -54,20 +54,27 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-if(window.discourseId) {
-  let channel = socket.channel("discourses:" + window.discourseId, {})
-} else {
-  let channel = socket.channel("discourses:new", {})
-}
+let channel = socket.channel("discourses:" + window.discourseId, {})
 
 let $pointToMake = $("#point-to-make")
 let $saySubmitter = $("#say-submitter")
+let $discourseCreator = $("#discourse-creator")
 let $points = $("#points")
 
 $saySubmitter.on("click", event => {
   let pointMade = $pointToMake.val()
   appendPoint(pointMade, window.userName)
   channel.push("new_point", {body: pointMade})
+  $pointToMake.val("")
+});
+
+$discourseCreator.on("click", event => {
+  let pointMade = $pointToMake.val()
+  let parentDiscourseId = $("#parent_discourse_id").val()
+  let parentPointIndex = $("#parent_point_index").val()
+  let parentCommentIndex = $("#parent_comment_index").val()
+  appendPoint(pointMade, window.userName)
+  channel.push("new_discourse", {body: pointMade, parent_discourse_id: parentDiscourseId, parent_point_index: parentPointIndex, parent_comment_index: parentCommentIndex})
   $pointToMake.val("")
 });
 
@@ -80,8 +87,9 @@ $(".comment-submitter").on("click", event => {
   $commentToMake.val("")
 });
 
+
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfullier", resp) })
+  .receive("ok", resp => { console.log("Joined pretty successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
 export default socket

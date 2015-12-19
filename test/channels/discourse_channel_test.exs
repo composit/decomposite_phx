@@ -2,6 +2,7 @@ defmodule Decomposite.DiscourseChannelTest do
   use Decomposite.ChannelCase
 
   alias Decomposite.DiscourseChannel
+  alias Decomposite.Discourse
 
   setup do
     {:ok, commenter} = create_test_user
@@ -18,8 +19,22 @@ defmodule Decomposite.DiscourseChannelTest do
   end
 
   test "new_discourse creates a new discourse", %{socket: socket, discourse: discourse} do
+    number_of_discourses = Enum.count(Repo.all(Discourse))
     ref = push socket, "new_discourse", %{"parent_discourse_id" => discourse.id, "parent_point_index" => "0", "parent_comment_index" => "0", "body" => "new discourse!"}
     assert_reply ref, :ok, %{}
+    assert Enum.count(Repo.all(Discourse)) == number_of_discourses + 1
+  end
+
+  test "new_discourse updates the child_discourse_id in the comments", %{socket: socket, discourse: discourse} do
+    ref = push socket, "new_discourse", %{"parent_discourse_id" => discourse.id, "parent_point_index" => "0", "parent_comment_index" => "0", "body" => "new discourse!"}
+    assert_reply ref, :ok, %{}
+    updated_discourse = Repo.get!(Discourse, discourse.id)
+    child_discourse_id = updated_discourse.comments["c"]
+    |> Enum.at(0)
+    |> Enum.at(0)
+    |> Enum.at(2)
+    child_discourse = Repo.get_by!(Discourse, parent_discourse_id: updated_discourse.id)
+    assert child_discourse_id == child_discourse.id
   end
 
   test "new_point adds a point to the discourse", %{socket: socket, discourse: discourse} do

@@ -45,6 +45,6 @@ defmodule Decomposite.SessionTest do
   end
 
   test "indicates when a user is not signed in", context do
-    assert false == Session.signed_in?(context[:conn])
+    refute Session.signed_in?(context[:conn])
   end
 end

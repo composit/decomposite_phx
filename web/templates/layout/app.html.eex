@@ -10,7 +10,11 @@
     <title>Decomposite web-page</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <script>
-      window.discourseId = "<%= @discourse.id %>"
+      <%= if @discourse.id do %>
+        window.discourseId = "<%= @discourse.id %>"
+      <% else %>
+        window.discourseId = "new"
+      <% end %>
       <%= if assigns[:user_token] do %>
         window.userToken   = "<%= assigns[:user_token] %>"
         window.userName    = "<%= current_user(@conn).name %>"
