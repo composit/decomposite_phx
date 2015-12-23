@@ -20,3 +20,4 @@ import "phoenix_html" // aliased in webpack.config.js
 
 import socket from "./socket"
 import discourse from "./discourse"
+import disco from "./discourse.jsx"

@@ -1,4 +1,6 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var webpack = require('webpack');
+
 module.exports = {
   entry: ["./web/static/js/app.js", "./web/static/css/app.scss"],
   output: {
@@ -19,11 +21,11 @@ module.exports = {
   },
   module: {
     loaders: [{
-      test: /\.js$/,
+      test: /\.jsx?$/,
       loader: "babel",
       include: __dirname,
       query: {
-        presets: ["es2015"]
+        presets: ["es2015", "react"]
       }
     }, {
       test: /\.css$/,
@@ -34,6 +36,9 @@ module.exports = {
     }]
   },
   plugins: [
-    new ExtractTextPlugin("css/app.css")
+    new ExtractTextPlugin("css/app.css"),
+    new webpack.ProvidePlugin({
+      $: "jquery"
+    })
   ]
 };
