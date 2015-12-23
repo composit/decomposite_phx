@@ -3,7 +3,7 @@
 
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/my_app/endpoint.ex":
-import {Socket} from "deps/phoenix/web/static/js/phoenix"
+import {Socket} from "phoenix" // aliased in webpack.config.js
 
 let socket = new Socket("/socket", {params: {token: window.userToken}})
 
@@ -54,7 +54,7 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("discourses:" + window.discourseId, {})
+let chan = socket.channel("discourses:" + window.discourseId, {})
 
 let $pointToMake = $("#point-to-make")
 let $saySubmitter = $("#say-submitter")
@@ -64,7 +64,7 @@ let $points = $("#points")
 $saySubmitter.on("click", event => {
   let pointMade = $pointToMake.val()
   appendPoint(pointMade, window.userName)
-  channel.push("new_point", {body: pointMade})
+  chan.push("new_point", {body: pointMade})
   $pointToMake.val("")
 });
 
@@ -74,7 +74,7 @@ $discourseCreator.on("click", event => {
   let parentPointIndex = $("#parent_point_index").val()
   let parentCommentIndex = $("#parent_comment_index").val()
   appendPoint(pointMade, window.userName)
-  channel.push("new_discourse", {body: pointMade, parent_discourse_id: parentDiscourseId, parent_point_index: parentPointIndex, parent_comment_index: parentCommentIndex})
+  chan.push("new_discourse", {body: pointMade, parent_discourse_id: parentDiscourseId, parent_point_index: parentPointIndex, parent_comment_index: parentCommentIndex})
   $pointToMake.val("")
 });
 
@@ -83,12 +83,12 @@ $(".comment-submitter").on("click", event => {
   let commentMade = $commentToMake.val()
   let $comments = $(event.target).closest(".commenter").siblings(".comments")
   $comments.append(`<p class="comment">${commentMade} - ${window.userName}</p>`)
-  channel.push("new_comment", {body: commentMade, point_index: $(event.target).data("pointIndex")})
+  chan.push("new_comment", {body: commentMade, point_index: $(event.target).data("pointIndex")})
   $commentToMake.val("")
 });
 
 
-channel.join()
+chan.join()
   .receive("ok", resp => { console.log("Joined pretty successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 

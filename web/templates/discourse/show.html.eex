@@ -1,4 +1,4 @@
-<div id="discourse" class="col-md-8">
+<div id="discourse">
   <div class="actions">
     <%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %>
   </div>
@@ -22,7 +22,7 @@
     <% end %>
   </div>
 </div>
-<div id="comments" class="col-md-4">
+<div id="comments">
   <%= for {_, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
     <div id="point-#{point_index}-comments" class="point-comments">
       <div class="comments">

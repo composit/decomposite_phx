@@ -26,9 +26,9 @@
   </head>
 
   <body>
-    <div class="container" role="main">
+    <div class="container">
       <div class="header">
-        <ul class="nav nav-pills pull-right">
+        <ul>
           <%= if signed_in?(@conn) do %>
             <li><%= current_user(@conn).name %></li>
             <li><%= link "Sign out", to: session_path(@conn, :delete), method: :delete %></li>
@@ -43,6 +43,7 @@
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
+      <div id="example">example</div>
       <%= @inner %>
 
     </div> <!-- /container -->
