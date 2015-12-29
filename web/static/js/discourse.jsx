@@ -77,7 +77,6 @@ var DiscourseApp = React.createClass({
     let pointComments = nextComments[this.state.selectedPointIndex] || []
     let nextPointComments = pointComments.concat([[this.state.commentText, this.state.currentUserId]])
     nextComments[this.state.selectedPointIndex] = nextPointComments
-    debugger
 
     this.setState({comments: nextComments, commentText: nextText})
   },
