@@ -18,9 +18,10 @@
         window.discourseId = "new"
       <% end %>
       <%= if assigns[:user_token] do %>
-        window.userToken   = "<%= assigns[:user_token] %>"
-        window.userName    = "<%= current_user(@conn).name %>"
-        window.userType    = "<%= user_type(@discourse, current_user(@conn).id) %>"
+        window.userToken = "<%= assigns[:user_token] %>"
+        window.userId    = "<%= assigns[:user_id] %>"
+        window.userName  = "<%= current_user(@conn).name %>"
+        window.userType  = "<%= user_type(@discourse, current_user(@conn).id) %>"
       <% end %>
     </script>
   </head>
@@ -37,13 +38,11 @@
             <li><%= link "Sign up", to: registration_path(@conn, :new) %></li>
           <% end %>
         </ul>
-        <h1>decomposite</h1>
       </div>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-      <div id="example">example</div>
       <%= @inner %>
 
     </div> <!-- /container -->

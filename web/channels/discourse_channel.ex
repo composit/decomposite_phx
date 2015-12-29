@@ -47,6 +47,7 @@ defmodule Decomposite.DiscourseChannel do
   end
 
   def handle_in("new_comment", %{"body" => body, "point_index" => point_index}, socket) do
+    {point_index, _} = Integer.parse(point_index)
     discourse = get_discourse_by_topic(socket.topic)
     comments = discourse.comments["c"]
     point_comments = Enum.at(comments, point_index)
