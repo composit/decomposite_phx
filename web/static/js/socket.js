@@ -1,12 +1,11 @@
-/*
 // NOTE: The contents of this file will only be executed if
 // you uncomment its entry in "web/static/js/app.js".
 
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/my_app/endpoint.ex":
-import {Socket} from "phoenix" // aliased in webpack.config.js
+// import {Socket} from "phoenix" // aliased in webpack.config.js
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+// let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -52,65 +51,7 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
 
-socket.connect()
+// socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let chan = socket.channel("discourses:" + window.discourseId, {})
-
-let $pointToMake = $("#point-to-make")
-let $saySubmitter = $("#say-submitter")
-let $discourseCreator = $("#discourse-creator")
-let $points = $("#points")
-
-$saySubmitter.on("click", event => {
-  let pointMade = $pointToMake.val()
-  appendPoint(pointMade, window.userName)
-  chan.push("new_point", {body: pointMade})
-  $pointToMake.val("")
-});
-
-$discourseCreator.on("click", event => {
-  let pointMade = $pointToMake.val()
-  let parentDiscourseId = $("#parent_discourse_id").val()
-  let parentPointIndex = $("#parent_point_index").val()
-  let parentCommentIndex = $("#parent_comment_index").val()
-  appendPoint(pointMade, window.userName)
-  chan.push("new_discourse", {body: pointMade, parent_discourse_id: parentDiscourseId, parent_point_index: parentPointIndex, parent_comment_index: parentCommentIndex})
-  $pointToMake.val("")
-});
-
-$(".comment-submitter").on("click", event => {
-  let $commentToMake = $(event.target).siblings(".comment-to-make").first()
-  let commentMade = $commentToMake.val()
-  let $comments = $(event.target).closest(".commenter").siblings(".comments")
-  $comments.append(`<p class="comment">${commentMade} - ${window.userName}</p>`)
-  chan.push("new_comment", {body: commentMade, point_index: $(event.target).data("pointIndex")})
-  $commentToMake.val("")
-});
-
-
-chan.join()
-  .receive("ok", resp => { console.log("Joined pretty successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
-
-export default socket
-
-function appendPoint(point, name) {
-  $points.append(`<p class="point">${point} - ${name}</p>`)
-  showOrHideSayer()
-}
-
-function showOrHideSayer() {
-  let numberOfPoints = $("#discourse #points .point").length
-  let $sayer = $("#sayer")
-  if(numberOfPoints % 2 == 0 && window.userType == "initiator") {
-    $sayer.show()
-  } else if(numberOfPoints % 2 == 1 && window.userType == "replier") {
-    $sayer.show()
-  } else {
-    $sayer.hide()
-  }
-}
-
-showOrHideSayer()
-*/
+// let chan = socket.channel("discourses:" + window.discourseId, {})

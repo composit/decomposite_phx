@@ -18,6 +18,5 @@ import "phoenix_html" // aliased in webpack.config.js
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-import socket from "./socket"
-import discourse from "./discourse"
-import disco from "./discourse.jsx"
+// import socket from "./socket"
+import discourse from "./discourse.jsx"

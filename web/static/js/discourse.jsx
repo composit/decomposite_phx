@@ -53,6 +53,13 @@ var Comment = React.createClass({
   }
 })
 var CommentList = React.createClass({
+  componentDidUpdate: function() {
+    if(this.props.pointIndex) {
+      let point = $(".point")[this.props.pointIndex]
+      let offset = $(point).offset().top
+      $("#comments").offset({top: offset})
+    }
+  },
   render: function() {
     if(this.props.comments) {
       let _this = this
