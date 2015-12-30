@@ -152,10 +152,10 @@ var DiscourseApp = React.createClass({
           </div>
         </div>
         <div id="comments">
-          <CommentList comments={this.state.comments[this.state.selectedPointIndex]} discourseId={this.state.id} pointIndex={this.state.selectedPointIndex} commentsReplyable={this.commentsReplyable()}/>
           <div className="commenter">
             {this.renderCommentForm()}
           </div>
+          <CommentList comments={this.state.comments[this.state.selectedPointIndex]} discourseId={this.state.id} pointIndex={this.state.selectedPointIndex} commentsReplyable={this.commentsReplyable()}/>
         </div>
       </div>
     )
