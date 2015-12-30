@@ -21,12 +21,10 @@ defmodule Decomposite.DiscourseChannel do
     |> Repo.insert
     if response == :ok do
       parent_discourse = Repo.get!(Discourse, parent_discourse_id)
-      {point_index, _} = Integer.parse(parent_point_index)
-      {comment_index, _} = Integer.parse(parent_comment_index)
       comments = parent_discourse.comments["c"]
-      parent_point_comments = Enum.at(comments, point_index)
-      |> List.update_at(comment_index, &(&1 ++ [changeset.id]))
-      comments = List.replace_at(comments, point_index, parent_point_comments)
+      parent_point_comments = Enum.at(comments, parent_point_index)
+      |> List.update_at(parent_comment_index, &(&1 ++ [changeset.id]))
+      comments = List.replace_at(comments, parent_point_index, parent_point_comments)
       user_id = socket.assigns[:user_id]
       Discourse.changeset(parent_discourse, %{comments: %{"c" => comments}, updater_id: user_id})
       |> Repo.update!

@@ -24,16 +24,37 @@ var PointList = React.createClass({
 })
 var Comment = React.createClass({
   render: function() {
-    return <li>{this.props.commentText}</li>
+    return(
+      <li>
+        {this.props.commentText}
+        {this.actions()}
+      </li>
+    )
+  },
+  actions: function() {
+    if(this.props.childDiscourseId) {
+      return this.readMoreLink()
+    } else {
+      if(this.props.commentsReplyable) {
+        return this.replyLink()
+      }
+    }
+  },
+  readMoreLink: function() {
+    return <a href={"/d/" + this.props.childDiscourseId}>read more&hellip;</a>
+  },
+  replyLink: function(commentIndex) {
+    return <a href={"/d/new/" + this.props.discourseId + "/" + this.props.pointIndex + "/" + this.props.commentIndex}>reply</a>
   }
 })
 var CommentList = React.createClass({
   render: function() {
     if(this.props.comments) {
+      let _this = this
       var createItem = function(comment, index) {
-        return <Comment key={"comment" + index} commentText={comment[0]} className="comment"/>
+        return <Comment key={"comment" + index} commentText={comment[0]} discourseId={_this.props.discourseId} pointIndex={_this.props.pointIndex} commentIndex={index} commentsReplyable={_this.props.commentsReplyable} childDiscourseId={comment[2]} className="comment"/>
       }
-      return <ul>{this.props.comments.map(createItem)}</ul>
+      return <ul>{_this.props.comments.map(createItem)}</ul>
     } else {
       return null
     }
@@ -42,6 +63,7 @@ var CommentList = React.createClass({
 var DiscourseApp = React.createClass({
   getInitialState: function() {
     return {
+      id: this.props.id,
       points: this.props.points.p,
       comments: this.props.comments.c,
       selectedPointIndex: null,
@@ -68,6 +90,20 @@ var DiscourseApp = React.createClass({
     let nextItems = this.state.points.concat([this.state.responseText])
     let nextText = ''
     this.setState({points: nextItems, responseText: nextText})
+  },
+  handleCreateSubmit: function(e) {
+    e.preventDefault()
+    this.state.chan.push("new_discourse", {
+      body: this.state.responseText,
+      parent_discourse_id: this.props.parent_discourse_id,
+      parent_point_index: this.props.parent_point_index,
+      parent_comment_index: this.props.parent_comment_index
+    }).receive('ok', response => {
+      console.log('received')
+    })
+    let nextItems = this.state.points.concat([this.state.responseText])
+    let nextText = ''
+    this.setState({id: 'changeme', points: nextItems, responseText: nextText})
   },
   handleCommentSubmit: function(e) {
     e.preventDefault()
@@ -104,7 +140,7 @@ var DiscourseApp = React.createClass({
           </div>
         </div>
         <div id="comments">
-          <CommentList comments={this.state.comments[this.state.selectedPointIndex]} />
+          <CommentList comments={this.state.comments[this.state.selectedPointIndex]} discourseId={this.state.id} pointIndex={this.state.selectedPointIndex} commentsReplyable={this.commentsReplyable()}/>
           <div className="commenter">
             {this.renderCommentForm()}
           </div>
@@ -113,13 +149,22 @@ var DiscourseApp = React.createClass({
     )
   },
   renderPointForm: function() {
-    if(this.state.currentUserId == this.upNextId()) {
-      return(
-        <form onSubmit={this.handleResponseSubmit}>
-          <textarea placeholder="respond&hellip;" onChange={this.onResponseChange} value={this.state.responseText} />
-          <button>submit</button>
-        </form>
-      )
+    if(this.discourseReplyable()) {
+      if(this.state.id) {
+        return(
+          <form onSubmit={this.handleResponseSubmit}>
+            <textarea placeholder="respond&hellip;" onChange={this.onResponseChange} value={this.state.responseText} />
+            <button>submit</button>
+          </form>
+        )
+      } else {
+        return(
+          <form onSubmit={this.handleCreateSubmit}>
+            <textarea placeholder="respond&hellip;" onChange={this.onResponseChange} value={this.state.responseText} />
+            <button>submit</button>
+          </form>
+        )
+      }
     }
   },
   renderCommentForm: function() {
@@ -132,9 +177,14 @@ var DiscourseApp = React.createClass({
       )
     }
   },
-  upNextId: function() {
-    let numberOfPoints = this.state.points.length
-    if(numberOfPoints % 2 == 0) {
+  discourseReplyable: function() {
+    return this.state.currentUserId == this.responsibleUserId(this.state.points.length + 1)
+  },
+  commentsReplyable: function() {
+    return this.state.currentUserId == this.responsibleUserId(this.state.selectedPointIndex)
+  },
+  responsibleUserId: function(pointIndex) {
+    if(pointIndex % 2 == 0) {
       return this.props.initiator_id
     } else {
       return this.props.replier_id

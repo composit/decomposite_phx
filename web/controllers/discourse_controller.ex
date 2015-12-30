@@ -1,3 +1,5 @@
+require Integer
+
 defmodule Decomposite.DiscourseController do
   use Decomposite.Web, :controller
   alias Decomposite.Discourse
@@ -23,6 +25,8 @@ defmodule Decomposite.DiscourseController do
 
   def new(conn, %{"parent_discourse_id" => parent_discourse_id, "parent_point_index" => parent_point_index, "parent_comment_index" => parent_comment_index}) do
     initiator_id = conn.assigns[:user_id]
+    {parent_point_index, _} = Integer.parse(parent_point_index)
+    {parent_comment_index, _} = Integer.parse(parent_comment_index)
     discourse = DiscourseFactory.build_from_parent(parent_discourse_id, parent_point_index, parent_comment_index, initiator_id)
     render(conn, "show.html", discourse: discourse)
   end

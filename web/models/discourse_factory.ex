@@ -1,5 +1,3 @@
-require Integer
-
 defmodule Decomposite.DiscourseFactory do
   alias Decomposite.Discourse
   alias Decomposite.Repo
@@ -11,8 +9,6 @@ defmodule Decomposite.DiscourseFactory do
   end
   
   def fields_from_parent(discourse_id, point_index, comment_index, initiator_id, body \\ nil) do
-    {point_index, _} = Integer.parse(point_index)
-    {comment_index, _} = Integer.parse(comment_index)
     discourse = Repo.get!(Discourse, discourse_id)
     point = discourse.points["p"]
     |> Enum.at(point_index)
