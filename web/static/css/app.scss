@@ -32,6 +32,22 @@ textarea {
   width: 80%;
   float: left;
 
+  #points ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1em;
+    text-indent: -1em;
+
+    li.initiator:before {
+      content: "←";
+    }
+
+    li.replier:before {
+      content: "→";
+    }
+  }
+
+
   .point {
     line-height: 1.8em;
   }

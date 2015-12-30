@@ -11,11 +11,16 @@ var PointList = React.createClass({
   render: function() {
     let _this = this
     var createItem = function(pointText, index) {
-      var className
-      if (_this.props.selectedIndex == index) {
+      let className
+      if(_this.props.selectedIndex == index) {
         className = "point selected"
       } else {
         className = "point"
+      }
+      if(index % 2 == 0) {
+        className = className + " initiator"
+      } else {
+        className = className + " replier"
       }
       return <Point key={"point" + index} pointText={pointText} index={index} clickHandler={_this.props.handleClick} className={className}/>
     }
