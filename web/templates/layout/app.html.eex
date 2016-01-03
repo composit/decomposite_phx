@@ -23,8 +23,12 @@
 
   <body>
     <div class="container">
-      <div class="header">
-        <ul>
+      <div id="header" class="clear">
+        <ul id="actions">
+          <li><%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %></li>
+          <li><strong>decomposite</strong></li>
+        </ul>
+        <ul id="session">
           <%= if signed_in?(@conn) do %>
             <li><%= current_user(@conn).name %></li>
             <li><%= link "Sign out", to: session_path(@conn, :delete), method: :delete %></li>
@@ -34,9 +38,6 @@
           <% end %>
         </ul>
       </div>
-
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
       <%= @inner %>
 

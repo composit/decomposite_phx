@@ -66,7 +66,7 @@ var CommentList = React.createClass({
       var createItem = function(comment, index) {
         return <Comment key={"comment" + index} commentText={comment[0]} discourseId={_this.props.discourseId} pointIndex={_this.props.pointIndex} commentIndex={index} commentsReplyable={_this.props.commentsReplyable} childDiscourseId={comment[2]} className="comment"/>
       }
-      return <ul>{_this.props.comments.map(createItem)}</ul>
+      return <ul className="point-comments">{_this.props.comments.map(createItem)}</ul>
     } else {
       return null
     }
@@ -156,9 +156,6 @@ var DiscourseApp = React.createClass({
     return (
       <div>
         <div id="discourse">
-          <div className="actions">
-            <a href={"/d/" + this.props.parent_discourse_id}>back</a>
-          </div>
           <div id="points">
             <PointList points={this.state.points} selectedIndex={this.state.selectedPointIndex} handleClick={this.handleClickPoint} />
           </div>
@@ -167,10 +164,10 @@ var DiscourseApp = React.createClass({
           </div>
         </div>
         <div id="comments">
+          <CommentList comments={this.state.comments[this.state.selectedPointIndex]} discourseId={this.state.id} pointIndex={this.state.selectedPointIndex} commentsReplyable={this.commentsReplyable()}/>
           <div className="commenter">
             {this.renderCommentForm()}
           </div>
-          <CommentList comments={this.state.comments[this.state.selectedPointIndex]} discourseId={this.state.id} pointIndex={this.state.selectedPointIndex} commentsReplyable={this.commentsReplyable()}/>
         </div>
       </div>
     )

@@ -1,4 +1,4 @@
-<div id="content"></div>
+<div id="content" class="clear"></div>
 <script type="application/json" id="point-data">
   <%= raw Poison.encode!(@discourse) %>
 </script>
