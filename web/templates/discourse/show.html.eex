@@ -1,48 +1,7 @@
-<div id="content">
-  <div id="discourse">
-    <div class="actions">
-      <%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %>
-    </div>
-    <div id="points">
-    </div>
-    <div id="sayer" class="actions">
-      <textarea id="point-to-make" placeholder="respond..."></textarea>
-      <%= if @discourse.id do %>
-        <input type="submit" id="say-submitter" />
-      <% else %>
-        <input type="hidden" id="parent_discourse_id" value="<%= @discourse.parent_discourse_id %>" />
-        <input type="hidden" id="parent_point_index" value="<%= @discourse.parent_point_index %>" />
-        <input type="hidden" id="parent_comment_index" value="<%= @discourse.parent_comment_index %>" />
-        <input type="submit" id="discourse-creator" />
-      <% end %>
-    </div>
-  </div>
-  <div id="comments">
-    <%= for {_, point_index} <- Enum.with_index(@discourse.points["p"]) do %>
-      <div id="point-#{point_index}-comments" class="point-comments">
-        <div class="comments">
-          <%= for {comment_attrs, comment_index} <- Enum.with_index(visible_comments(@discourse, point_index, current_user_id(@conn))) do %>
-            <p class="comment">
-              <%= Enum.at(comment_attrs, 0) %>
-              - <%= find_user(Enum.at(comment_attrs, 1)).name %>
-              <%= if child_discourse_id = Enum.at(comment_attrs, 2) do %>
-                <%= link "read more", to: discourse_path(@conn, :show, child_discourse_id) %>
-              <% else %>
-                <%= if belongs_to_user(@discourse, point_index, current_user_id(@conn)) do %>
-                  <%= link "reply", to: discourse_path(@conn, :new, @discourse.id, point_index, comment_index) %>
-                <% end %>
-              <% end %>
-            </p>
-          <% end %>
-        </div>
-        <div class="commenter">
-          <textarea class="comment-to-make" placeholder="comment..."></textarea>
-          <input type="submit" class="comment-submitter" data-point-index="<%= point_index %>" />
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
+<div id="content"></div>
 <script type="application/json" id="point-data">
   <%= raw Poison.encode!(@discourse) %>
+</script>
+<script type="application/json" id="comment-data">
+  <%= raw Poison.encode!(visible_comments(@discourse, current_user_id(@conn))) %>
 </script>

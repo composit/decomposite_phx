@@ -77,13 +77,17 @@ var DiscourseApp = React.createClass({
     return {
       id: this.props.id,
       points: this.props.points.p,
-      comments: this.props.comments.c,
+      comments: this.props.comments,
       selectedPointIndex: null,
       responseText: '',
       commentText: '',
       currentUserId: window.userId,
-      chan: this.joinChannel(),
+      chan: null
     }
+  },
+  componentWillMount: function() {
+    let newChan = this.joinChannel(this.state.id)
+    this.setState({chan: newChan})
   },
   onResponseChange: function(e) {
     this.setState({responseText: e.target.value})
@@ -111,11 +115,20 @@ var DiscourseApp = React.createClass({
       parent_point_index: this.props.parent_point_index,
       parent_comment_index: this.props.parent_comment_index
     }).receive('ok', response => {
-      console.log('received')
+      let discourseId = response.discourse_id
+      history.replaceState({}, "", "/d/" + discourseId)
+      let nextItems = this.state.points.concat([this.state.responseText])
+      let nextText = ''
+      let oldChanTopic = this.state.chan.topic
+      this.state.chan.leave("I've found a new channel").receive("ok", response => { console.log('left channel: ' + oldChanTopic)})
+      let newChan = this.joinChannel(discourseId)
+      this.setState({
+        id: discourseId,
+        points: nextItems,
+        responseText: nextText,
+        chan: newChan
+      })
     })
-    let nextItems = this.state.points.concat([this.state.responseText])
-    let nextText = ''
-    this.setState({id: 'changeme', points: nextItems, responseText: nextText})
   },
   handleCommentSubmit: function(e) {
     e.preventDefault()
@@ -128,13 +141,15 @@ var DiscourseApp = React.createClass({
 
     this.setState({comments: nextComments, commentText: nextText})
   },
-  joinChannel: function() {
+  joinChannel: function(discourseId) {
+    if(!discourseId) { discourseId = "new" }
     let socket = new Socket("/socket", {params: {token: window.userToken}})
     socket.connect()
-    let chan = socket.channel("discourses:" + window.discourseId, {})
+    let chan = socket.channel("discourses:" + discourseId, {})
     chan.join()
-      .receive("ok", resp => { console.log("Joined pretty successfully", resp) })
-      .receive("error", resp => { console.log("Unable to join", resp) })
+      .receive("ok", resp => { console.log(resp.message) })
+      .receive("error", resp => { console.log("Unable to join:" + resp.reason) })
+
     return chan
   },
   render: function() {
@@ -190,7 +205,7 @@ var DiscourseApp = React.createClass({
     }
   },
   discourseReplyable: function() {
-    return this.state.currentUserId == this.responsibleUserId(this.state.points.length + 1)
+    return this.state.currentUserId == this.responsibleUserId(this.state.points.length)
   },
   commentsReplyable: function() {
     return this.state.currentUserId == this.responsibleUserId(this.state.selectedPointIndex)
@@ -204,5 +219,6 @@ var DiscourseApp = React.createClass({
   }
 })
 
-let points = JSON.parse(document.getElementById("point-data").innerHTML)
-ReactDOM.render(<DiscourseApp {...points} />, document.getElementById('content'))
+let discourse = JSON.parse(document.getElementById("point-data").innerHTML)
+discourse.comments = JSON.parse(document.getElementById("comment-data").innerHTML)
+ReactDOM.render(<DiscourseApp {...discourse} />, document.getElementById('content'))

@@ -4,7 +4,7 @@ defmodule Decomposite.Discourse do
   use Decomposite.Web, :model
   alias Decomposite.Repo
 
-  @derive {Poison.Encoder, only: [:id, :points, :comments, :initiator_id, :replier_id, :parent_discourse_id, :parent_point_index, :parent_comment_index]}
+  @derive {Poison.Encoder, only: [:id, :points, :initiator_id, :replier_id, :parent_discourse_id, :parent_point_index, :parent_comment_index]}
 
   @primary_key {:id, :binary_id, autogenerate: true}
 

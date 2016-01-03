@@ -6,12 +6,16 @@ defmodule Decomposite.DiscourseChannel do
   alias Decomposite.Discourse
   alias Decomposite.DiscourseFactory
 
-  def join("discourses:" <> _discourse_id, _params, socket) do
+  def join("discourses:" <> discourse_id, _params, socket) do
     if authorized?(socket) do
-      {:ok, socket}
+      {:ok, %{message: "joined channel: discourses:#{discourse_id}"}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def terminate(_message, socket) do
+    # do something when the user leaves a channel
   end
 
   def handle_in("new_discourse", %{"parent_discourse_id" => parent_discourse_id, "parent_point_index" => parent_point_index, "parent_comment_index" => parent_comment_index,  "body" => body}, socket) do
@@ -30,7 +34,7 @@ defmodule Decomposite.DiscourseChannel do
       |> Repo.update!
     end
 
-    {:reply, response, socket}
+    {:reply, {response, %{discourse_id: changeset.id}}, socket}
   end
 
   def handle_in("new_point", %{"body" => body}, socket) do

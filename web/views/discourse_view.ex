@@ -11,9 +11,15 @@ defmodule Decomposite.DiscourseView do
     end
   end
 
-  def visible_comments(discourse, point_index, user_id) do
-    comments_by_point_index(discourse.comments, point_index)
-    |> Enum.filter fn(comment) ->
+  def visible_comments(discourse, user_id) do
+    Enum.with_index(discourse.comments["c"])
+    |> Enum.map fn({point_comments, point_index}) ->
+      visible_point_comments(point_comments, point_index, user_id, discourse)
+    end
+  end
+
+  def visible_point_comments(comments, point_index, user_id, discourse) do
+    Enum.filter comments, fn(comment) ->
       cond do
         belongs_to_user(discourse, point_index, user_id) ->
           true
@@ -25,10 +31,6 @@ defmodule Decomposite.DiscourseView do
           false
       end
     end
-  end
-
-  defp comments_by_point_index(comments, point_index) do
-    Enum.at(comments["c"], point_index) || []
   end
 
   def find_user(user_id) do

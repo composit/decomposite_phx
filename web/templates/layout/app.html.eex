@@ -12,11 +12,6 @@
     <script>try{Typekit.load({ async: true });}catch(e){}</script>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <script>
-      <%= if @discourse.id do %>
-        window.discourseId = "<%= @discourse.id %>"
-      <% else %>
-        window.discourseId = "new"
-      <% end %>
       <%= if assigns[:user_token] do %>
         window.userToken = "<%= assigns[:user_token] %>"
         window.userId    = "<%= assigns[:user_id] %>"
