@@ -1,31 +1,22 @@
 defmodule Decomposite.SessionController do
   use Decomposite.Web, :controller
 
-  def new(conn, _params) do
-    conn
-    |> put_layout(false)
-    |> render("new.html")
-  end
-
-  def create(conn, %{"session" => session_params}) do
+  def create(conn, %{"session" => session_params, "returner" => returner}) do
     case Decomposite.Session.signin(session_params, Decomposite.Repo) do
       {:ok, user} ->
         conn
         |> put_session(:current_user_id, user.id)
-        |> put_flash(:info, "Signed in")
-        |> redirect(to: "/")
+        |> redirect(to: returner)
       :error ->
         conn
-        |> put_flash(:info, "Wrong!")
-        |> put_layout(false)
-        |> render("new.html")
+        |> put_flash(:error, "Wrong!")
+        |> redirect(to: returner)
     end
   end
 
-  def delete(conn, _) do
+  def delete(conn, %{"returner" => returner}) do
     conn
     |> delete_session(:current_user_id)
-    |> put_flash(:info, "Signed out")
-    |> redirect(to: "/")
+    |> redirect(to: returner)
   end
 end

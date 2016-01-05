@@ -81,7 +81,7 @@ var DiscourseApp = React.createClass({
       selectedPointIndex: null,
       responseText: '',
       commentText: '',
-      currentUserId: window.userId,
+      currentUserId: this.props.user.id,
       chan: null
     }
   },
@@ -143,7 +143,8 @@ var DiscourseApp = React.createClass({
   },
   joinChannel: function(discourseId) {
     if(!discourseId) { discourseId = "new" }
-    let socket = new Socket("/socket", {params: {token: window.userToken}})
+    let token = this.props.token || "guest"
+    let socket = new Socket("/socket", {params: {token: token}})
     socket.connect()
     let chan = socket.channel("discourses:" + discourseId, {})
     chan.join()
@@ -216,6 +217,7 @@ var DiscourseApp = React.createClass({
   }
 })
 
+let userSession = JSON.parse(document.getElementById("user-session-data").innerHTML)
 let discourse = JSON.parse(document.getElementById("point-data").innerHTML)
 discourse.comments = JSON.parse(document.getElementById("comment-data").innerHTML)
-ReactDOM.render(<DiscourseApp {...discourse} />, document.getElementById('content'))
+ReactDOM.render(<DiscourseApp {...discourse} {...userSession} />, document.getElementById('content'))

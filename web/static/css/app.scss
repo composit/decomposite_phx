@@ -24,8 +24,11 @@ a {
     float: left;
   }
 
-  ul#session {
+  #session {
     float: right;
+
+    #sign-in {display: none}
+    #sign-up {display: none}
   }
 
   strong {

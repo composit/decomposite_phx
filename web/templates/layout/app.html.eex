@@ -11,13 +11,15 @@
     <script src="https://use.typekit.net/uab3uxn.js"></script>
     <script>try{Typekit.load({ async: true });}catch(e){}</script>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-    <script>
-      <%= if assigns[:user_token] do %>
-        window.userToken = "<%= assigns[:user_token] %>"
-        window.userId    = "<%= assigns[:user_id] %>"
-        window.userName  = "<%= current_user(@conn).name %>"
-        window.userType  = "<%= user_type(@discourse, current_user(@conn).id) %>"
-      <% end %>
+    <script type="application/json" id="user-session-data">
+      <%= raw Poison.encode!(%{
+        token: assigns[:user_token],
+        user: %{
+          id: assigns[:user_id],
+          name: user_name(@conn),
+          type: user_type(@discourse, current_user_id(@conn))
+        }
+      }) %>
     </script>
   </head>
 
@@ -26,17 +28,44 @@
       <div id="header" class="clear">
         <ul id="actions">
           <li><%= link "back", to: discourse_path(@conn, :show, @discourse.parent_discourse_id) %></li>
-          <li><strong>decomposite</strong></li>
+          <li><strong>Decomposite</strong></li>
         </ul>
-        <ul id="session">
-          <%= if signed_in?(@conn) do %>
-            <li><%= current_user(@conn).name %></li>
-            <li><%= link "Sign out", to: session_path(@conn, :delete), method: :delete %></li>
-          <% else %>
-            <li><%= link "Sign in", to: session_path(@conn, :new) %></li>
-            <li><%= link "Sign up", to: registration_path(@conn, :new) %></li>
-          <% end %>
-        </ul>
+        <div id="session">
+          <ul id="actions">
+            <li class="error"><%= get_flash(@conn, :error) %></li>
+            <%= if signed_in?(@conn) do %>
+              <li><%= current_user(@conn).name %></li>
+              <li><%= link "Sign out", to: session_path(@conn, :delete), method: :delete, id: "sign-out" %></li>
+            <% else %>
+              <li><%= link "Sign in", to: "#", id: "sign-in-link" %></li>
+              <li><%= link "Sign up", to: "#", id: "sign-up-link" %></li>
+            <% end %>
+          </ul>
+          <ul id="sign-in">
+            <%= form_for @conn, session_path(@conn, :create), [name: :session], fn f -> %>
+              <li>Username</li>
+              <li><%= text_input f, :name %></li>
+              <li>Password</li>
+              <li><%= password_input f, :password %></li>
+              <li><%= submit "Sign in" %></li>
+            <% end %>
+          </ul>
+          <ul id="sign-up">
+            <%= form_for @changeset, registration_path(@conn, :create), fn f -> %>
+              <%= if f.errors != [] do %>
+                <%= for {attr, message} <- f.errors do %>
+                  <li class="alert"><%= humanize(attr) %> <%= message %></li>
+                <% end %>
+              <% end %>
+
+              <li>Userame</li>
+              <li><%= text_input f, :name %></li>
+              <li>Password</li>
+              <li><%= password_input f, :password %></li>
+              <li><%= submit "Sign up" %></li>
+            <% end %>
+          </ul>
+        </div>
       </div>
 
       <%= @inner %>

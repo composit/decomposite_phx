@@ -21,4 +21,12 @@ defmodule Decomposite.LayoutViewTest do
     {:ok, commenter} = create_test_user(name: "commenter")
     assert LayoutView.user_type(discourse, commenter.id) == "commenter"
   end
+
+  test "returns user name" do
+    assert false
+  end
+
+  test "returns nil if unauthenticated" do
+    assert false
+  end
 end

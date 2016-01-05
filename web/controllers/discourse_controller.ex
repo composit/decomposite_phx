@@ -9,7 +9,12 @@ defmodule Decomposite.DiscourseController do
   def show(conn, %{"id" => id}) do
     discourse = Repo.get!(Discourse, id)
     |> Repo.preload([:initiator, :replier])
-    render(conn, "show.html", discourse: discourse)
+    # in case they're creating a new user
+    changeset = User.changeset(%User{})
+    conn
+    |> assign(:discourse, discourse)
+    |> assign(:changeset, changeset)
+    |> render("show.html")
   end
 
   def landing(conn, _params) do
@@ -20,7 +25,12 @@ defmodule Decomposite.DiscourseController do
     discourse = Repo.all(query)
     |> Enum.reverse
     |> hd
-    render(conn, "show.html", discourse: discourse)
+    # in case they're creating a new user
+    changeset = User.changeset(%User{})
+    conn
+    |> assign(:discourse, discourse)
+    |> assign(:changeset, changeset)
+    |> render("show.html")
   end
 
   def new(conn, %{"parent_discourse_id" => parent_discourse_id, "parent_point_index" => parent_point_index, "parent_comment_index" => parent_comment_index}) do

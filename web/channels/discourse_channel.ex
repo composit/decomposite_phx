@@ -7,11 +7,7 @@ defmodule Decomposite.DiscourseChannel do
   alias Decomposite.DiscourseFactory
 
   def join("discourses:" <> discourse_id, _params, socket) do
-    if authorized?(socket) do
-      {:ok, %{message: "joined channel: discourses:#{discourse_id}"}, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
+    {:ok, %{message: "joined channel: discourses:#{discourse_id}"}, socket}
   end
 
   def terminate(_message, socket) do

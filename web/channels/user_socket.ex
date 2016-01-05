@@ -25,7 +25,8 @@ defmodule Decomposite.UserSocket do
       {:ok, user_id} ->
         {:ok, assign(socket, :user_id, user_id)}
       {:error, reason} ->
-        :error
+        # unauthenticated. don't add a user_id to the socket assigns
+        {:ok, socket}
     end
   end
 
@@ -39,5 +40,11 @@ defmodule Decomposite.UserSocket do
   #     Decomposite.Endpoint.broadcast("users_socket:" <> user.id, "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(_socket), do: nil
+  def id(socket) do
+    if Dict.has_key?(socket.assigns, :user_id) do
+      "users_socket:#{socket.assigns.user_id}"
+    else
+      "users_socket:guest"
+    end
+  end
 end
