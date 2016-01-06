@@ -76,8 +76,4 @@ defmodule Decomposite.DiscourseChannel do
     [_, discourse_id] = String.split(topic, ":", parts: 2)
     Repo.get!(Discourse, discourse_id)
   end
-
-  defp authorized?(socket) do
-    !!socket.assigns[:user_id]
-  end
 end
