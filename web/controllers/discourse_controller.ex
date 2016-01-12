@@ -38,6 +38,10 @@ defmodule Decomposite.DiscourseController do
     {parent_point_index, _} = Integer.parse(parent_point_index)
     {parent_comment_index, _} = Integer.parse(parent_comment_index)
     discourse = DiscourseFactory.build_from_parent(parent_discourse_id, parent_point_index, parent_comment_index, initiator_id)
-    render(conn, "show.html", discourse: discourse)
+
+    # in case they're creating a new user
+    changeset = User.changeset(%User{})
+
+    render(conn, "show.html", discourse: discourse, changeset: changeset)
   end
 end
