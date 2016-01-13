@@ -2,7 +2,7 @@ defmodule Decomposite.Session do
   alias Decomposite.User
 
   def signin(params, repo) do
-    user = repo.get_by(User, name: String.downcase(params["name"]))
+    user = repo.get_by(User, name: params["name"])
     case authenticate(user, params["password"]) do
       true -> {:ok, user}
       _    -> :error
