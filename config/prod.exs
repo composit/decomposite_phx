@@ -59,3 +59,9 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
 # import_config "prod.secret.exs"
+
+config :decomposite, Decomposite.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  hostname: System.get_env("DB_HOST"),
+  username: System.get_env("POSTGRES_USERNAME"),
+  password: System.get_env("POSTGRES_PASSWORD")
