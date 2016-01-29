@@ -18,7 +18,7 @@ defmodule Seeder do
 
   def run do
     drop_existing_data
-    decomposite = Repo.get_by(User, name: 'decomposite')
+    decomposite = Repo.get_by(User, name: "decomposite")
     add_initial_cycle(decomposite)
   end
 
