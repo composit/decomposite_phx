@@ -25,8 +25,8 @@ defmodule Seeder do
   def drop_existing_data do
     Mix.shell.info "dropping existing data"
 
-    Repo.delete_all(User)
     Repo.delete_all(Discourse)
+    Repo.delete_all(User)
   end
 
   def add_initial_cycle(decomposite) do
