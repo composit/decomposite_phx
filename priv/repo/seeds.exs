@@ -18,13 +18,14 @@ defmodule Seeder do
 
   def run do
     drop_existing_data
-    decomposite = Repo.get_by(User, name: "decomposite")
+    decomposite = %User{name: "decomposite"} |> Repo.insert!
     add_initial_cycle(decomposite)
   end
 
   def drop_existing_data do
     Mix.shell.info "dropping existing data"
 
+    Repo.delete_all(User)
     Repo.delete_all(Discourse)
   end
 
