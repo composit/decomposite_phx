@@ -64,4 +64,5 @@ config :decomposite, Decomposite.Repo,
   adapter: Ecto.Adapters.Postgres,
   hostname: System.get_env("DB_HOST"),
   username: System.get_env("POSTGRES_USERNAME"),
-  password: System.get_env("POSTGRES_PASSWORD")
+  password: System.get_env("POSTGRES_PASSWORD"),
+  database: System.get_env("DB_NAME")
