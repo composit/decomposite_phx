@@ -18,8 +18,9 @@ defmodule Decomposite.Web do
 
   def model do
     quote do
-      use Ecto.Model
+      use Ecto.Schema
 
+      import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 1, from: 2]
     end
@@ -30,7 +31,7 @@ defmodule Decomposite.Web do
       use Phoenix.Controller
 
       alias Decomposite.Repo
-      import Ecto.Model
+      import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
 
       import Decomposite.Router.Helpers
@@ -63,7 +64,7 @@ defmodule Decomposite.Web do
       use Phoenix.Channel
 
       alias Decomposite.Repo
-      import Ecto.Model
+      import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
     end
   end

@@ -14,7 +14,7 @@ config :decomposite, Decomposite.Endpoint,
   cache_static_lookup: false,
   check_origin: false
 
-config :webpack_integration, WebpackIntegration.Endpoint,
+config :decomposite, Decomposite.Endpoint,
   watchers: [npm: ["start"]]
 
 # Watch static and templates for browser reloading.
