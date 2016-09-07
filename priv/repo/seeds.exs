@@ -18,7 +18,8 @@ defmodule Seeder do
 
   def run do
     drop_existing_data
-    decomposite = %User{name: "decomposite"} |> Repo.insert!
+    changeset = User.changeset(%User{}, %{"name" => "decomposite", "password" => "decomposite"})
+    {:ok, decomposite} = Decomposite.Registration.create(changeset, Repo)
     add_initial_cycle(decomposite)
   end
 

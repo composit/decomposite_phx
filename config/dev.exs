@@ -15,7 +15,7 @@ config :decomposite, Decomposite.Endpoint,
   check_origin: false
 
 config :decomposite, Decomposite.Endpoint,
-  watchers: [npm: ["start"]]
+  watchers: [node: ["node_modules/webpack/bin/webpack.js", "--watch", "--color"]]
 
 # Watch static and templates for browser reloading.
 config :decomposite, Decomposite.Endpoint,
