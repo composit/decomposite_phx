@@ -19,7 +19,7 @@ RUN mix local.hex --force
 RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
 
 # install ruby and sass
-RUN apt-get install -y ruby
+RUN apt-get install -y ruby ruby-dev
 RUN gem install sass
 
 # install nodejs
