@@ -35,6 +35,7 @@ COPY . /root/code
 WORKDIR /root/code
 RUN npm install
 RUN mix deps.get
+RUN mix local.rebar --force
 RUN MIX_ENV=prod mix compile
 RUN mix hex.info
 
